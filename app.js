@@ -17,7 +17,7 @@ const {ListingSchema , reviewSchema } = require("./schema.js");
 const review  =  require("./Models/reviews.js"); 
 const wrapeAsync = require("./utils/wrapeAsync.js");
 const listings  = require("./routs/listing.js")
-
+const reviews = require("./routs/review.js")
 
 
 main().then(()=>{
@@ -37,24 +37,9 @@ async function main(){
 
 
 
-app.use("/listing",listings)
+app.use("/listing",listings);
+app.use("/listing/:id/reviews",reviews);
 
-
-
-//index rout
-// app.get("/testlistin", async(req,res)=>{
-//   const samplelisting  =  new listing({
-//     title: "My new villa",
-//   decription: "by the beach",
-
-//   price: 120000,
-//   location:"kerala",
-//   country:"india",
-//   });
-//   await samplelisting.save()
-//  console.log("sample was saved");
-//  res.send("successfull");
-// })
 
 
 app.get("/",(req,res)=>{
