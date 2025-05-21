@@ -1,0 +1,79 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <h3 class="mb-4 text-center"><b><%= indata.title %></b></h3>
+    </div>
+
+    <div class="card col-6 offset-3 p-0  listing-card">
+      <img src="<%= indata.image %>" class="card-img-top show-img mx-auto d-block" alt="Listing Image">
+      <div class="card-body text-center">
+        <p class="card-text">
+          <%= indata.description %>
+        </p>
+        <p class="mb-1">
+          <b>Price:</b> ₹ <%= indata.price.toLocaleString("en-IN") %>
+        </p>
+        <p class="mb-1">
+          <b>Location:</b> <%= indata.location %>
+        </p>
+        <p class="mb-1">
+          <b>Country:</b> <%= indata.country %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+<div class="row mt-3">
+  <div class="col-3 offset-2">
+    <div class="d-flex gap-2">
+      <a href="/listing/<%= indata._id %>/edit" class="btn btn-dark w-100">Edit</a>
+      <form method="post" action="/listing/<%= indata._id %>?_method=DELETE" class="w-100">
+        <button type="submit" class="btn btn-danger w-100">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+ <div class="col-8 offset-3">
+  <br> 
+  <h4>Leave a Review</h4>
+  <hr>
+  <form action="/listing/<%= indata._id %>/reviews"  method="POST"  novalidate class="needs-validation" >
+    <div class="mb-3 mt-3">
+      <label for="rating" class="form-label">Rating</label>
+       <input  class="form-range" type="range" min="1" max="5" id="rating" name="review[rating]">
+    </div>
+    <div class="mb-3 mt-3">
+      <label  class="form-label" for="comment">Comment</label>
+      <textarea class="form-control" name="review[Comment]" id="Comment" cols="30" rows="10" required></textarea>
+      <div class="invalid-feedback">Please Add  some comment for review</div>
+    </div>
+    <button class="btn btn-outline-dark">Submit</button>
+  </form>
+  <hr>
+
+   <p> <b> All reviews </b> </p>
+  
+<div class="row">
+<% for(review of indata.reviews) { %>
+   <div class="card col-5 ms-3 mb-3 "> 
+    <div class="card-body">
+       <h5 class="card-title">Sagnik</h5>
+        <p class="card-text"><%=review.Comment %></p>
+        <p class="card-text"><%=review.rating %> Star</p>
+    </div>
+    <form class="mb-3" method="POST" action="/listing/<%= indata._id %>/reviews/<%= review._id %>?_method=DELETE">
+       <button class="btn btn-sm btn-dark">Delete</button>
+    </form>
+  </div>
+ <%  } %> 
+ </div> 
+
+ </div>  
+
+</div>
+
+<br>
+<br>
+
