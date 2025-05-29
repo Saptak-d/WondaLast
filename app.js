@@ -1,4 +1,4 @@
-const express =  require("express");
+const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const listing  =  require("./Models/listing.js"); 
@@ -18,7 +18,8 @@ const review  =  require("./Models/reviews.js");
 const wrapeAsync = require("./utils/wrapeAsync.js");
 const listings  = require("./routs/listing.js")
 const reviews = require("./routs/review.js")
-
+const session = require("express-session");
+const flash = require("connect-flash");
 
 main().then(()=>{
     console.log("connected to DB")
@@ -26,26 +27,44 @@ main().then(()=>{
   console.log("err");
 });
 
- 
 async function main(){
   await mongoose.connect('mongodb://127.0.0.1:27017/wondaelust');    
 }
 
-// validation for listinf form serverside 
-
-//validation for  reviem form serverside 
-
-
-
-app.use("/listing",listings);
-app.use("/listing/:id/reviews",reviews);
-
-
-
+const sessionOption = ({
+  secret : "Abac123",
+  resave: false,
+  saveUninitialized: true ,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 *60*1000,
+    maxAge: 7 * 24 * 60 *60*1000,
+    httpOnly : true
+  }
+})
 app.get("/",(req,res)=>{
     res.send("hi am the root");
 });
-//
+
+//middleware to store flash message
+
+app.use(session(sessionOption));
+
+app.use(flash());
+
+
+////middleware to store flash message
+
+app.use((req,res,next)=>{
+  res.locals.success = req.flash("success")
+  res.locals.error =  req.flash("error");
+  next();
+})
+
+
+app.use("/listing",listings);
+
+app.use("/listing/:id/reviews",reviews);
+
 
 app.use((req,res,next)=>{
   next( new ExpressError(404,"page is not found"));
