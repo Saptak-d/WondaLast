@@ -16,10 +16,16 @@ const ExpressError = require("./utils/expresserror.js");
 const {ListingSchema , reviewSchema } = require("./schema.js");
 const review  =  require("./Models/reviews.js"); 
 const wrapeAsync = require("./utils/wrapeAsync.js");
-const listings  = require("./routs/listing.js")
-const reviews = require("./routs/review.js")
+const listingsRouter  = require("./routs/listing.js")
+const reviewsRouter = require("./routs/review.js")
+const usersRouter = require("./routs/user.js")
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./Models/user.js");
+
+
 
 main().then(()=>{
     console.log("connected to DB")
@@ -51,19 +57,37 @@ app.use(session(sessionOption));
 
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()) );
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 ////middleware to store flash message
 
 app.use((req,res,next)=>{
   res.locals.success = req.flash("success")
   res.locals.error =  req.flash("error");
+  res.locals.curuser = req.user;
   next();
-})
+});
+
+// app.get("/demouser",async (req,res)=>{
+//   let fakeUser = new User({
+//     email : "spatk22@gmai.com",
+//     username : "delta-student",
+//   });
+//   const registerdUser = await User.register(fakeUser, "helloworld");
+//   console.log(registerdUser);
+// })
 
 
-app.use("/listing",listings);
 
-app.use("/listing/:id/reviews",reviews);
+app.use("/listing",listingsRouter);
+
+app.use("/listing/:id/reviews",reviewsRouter);
+app.use("/",usersRouter)
 
 
 app.use((req,res,next)=>{
