@@ -19,14 +19,17 @@
   </div>
 
   <% if( curuser && curuser._id.equals(indata.owner._id)) { %>
+
   <div class="col-3 offset-2">
     <div class="d-flex gap-2">
       <a  class="btn btn-dark w-100" href="/listing/<%= indata._id %>/edit">Edit</a>
+
       <form method="post" action="/listing/<%= indata._id %>?_method=DELETE" class="w-100">
         <button type="submit" class="btn btn-danger w-100">Delete</button>
       </form>
     </div>
   </div>
+
   <% } %>
 
 
@@ -35,12 +38,25 @@
   <h4>Leave a Review</h4>
   <hr>
  <% if(curuser) { %>
+   <form method="POST" action="/listing/<%= indata._id %>/reviews">
   
-  <form action="/listing/<%= indata._id %>/reviews"  method="POST"  novalidate class="needs-validation" >
-    <div class="mb-3 mt-3">
-      <label for="rating" class="form-label">Rating</label>
-       <input  class="form-range" type="range" min="1" max="5" id="rating" name="review[rating]">
-    </div>
+  <div class="mb-3 mt-3">
+    <label for="rating" class="form-label">Rating</label>
+  <fieldset class="starability-slot">
+   
+  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+  <label for="first-rate1" title="Terrible">1 star</label>
+  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+  <label for="first-rate2" title="Not good">2 stars</label>
+  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+  <label for="first-rate3" title="Average">3 stars</label>
+  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+  <label for="first-rate4" title="Very good">4 stars</label>
+  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+  <label for="first-rate5" title="Amazing">5 stars</label>
+  </fieldset>
+</div>
     <div class="mb-3 mt-3">
       <label  class="form-label" for="comment">Comment</label>
       <textarea class="form-control" name="review[Comment]" id="Comment" cols="30" rows="10" required></textarea>
@@ -62,8 +78,9 @@
    <div class="card col-5 ms-3 mb-3 "> 
     <div class="card-body">
        <h5 class="card-title">  @<%= review.author.username %> </h5>
+       <p class="starability-result card-text" data-rating="<%=review.rating%>"></p>
         <p class="card-text"><%=review.Comment %></p>
-        <p class="card-text"><%=review.rating %> Star</p>
+        
     </div>
     <form class="mb-3" method="POST" action="/listing/<%= indata._id %>/reviews/<%= review._id %>?_method=DELETE">
        <button class="btn btn-sm btn-dark">Delete</button>
