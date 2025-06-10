@@ -19,7 +19,6 @@ module.exports.showListing = async(req,res)=>{
     },
    })
   .populate("owner");
-   console.log(indata);
     if(!indata){ 
       req.flash("error", "List is not found");
          res.redirect("/listing");
@@ -30,10 +29,12 @@ module.exports.showListing = async(req,res)=>{
 };
 
 module.exports.createListing = async(req,res,next)=>{
+     let url = req.file.path;
+     let filename = req.file.filename;
      const newlisting =   new listing(req.body.listing);
-     console.log(req.user);  
      newlisting.owner = req.user._id;
-   await newlisting.save();  
+     newlisting.image = {url, filename};
+      await newlisting.save();  
     req.flash("success", "New listing is created");
    res.redirect("/listing");
  };
@@ -46,17 +47,25 @@ module.exports.createListing = async(req,res,next)=>{
           res.redirect("/listing");
      }
      else{
-     res.render("listing/edit.ejs",{indata});
+       let originalimageurl = indata.image.url;
+       originalimageurl = originalimageurl.replace("/upload" , "/upload/w_250")
+     res.render("listing/edit.ejs",{indata, originalimageurl});
      }
  
  };
 
  module.exports.updateListing = async (req,res)=>{
   if(!req.body.listing){
-    throw new ExpressError(404,"Send Valid Data");
+     throw new ExpressError(404,"Send Valid Data");
    }
   let{id} = req.params;
- await listing.findByIdAndUpdate(id,{...req.body.listing})
+   let uplisting = await listing.findByIdAndUpdate(id,{...req.body.listing});
+   if(typeof req.file !== "undefined"){
+     let url = req.file.path;
+     let filename = req.file.filename;
+     uplisting.image = {url , filename};
+    await  uplisting.save();
+  }
    req.flash("success", " listing  Updated");
    res.redirect(`/listing/${id}`);
 };
