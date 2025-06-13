@@ -1,98 +1,129 @@
 <% layout("layouts/boilerplate") %>
 
+<!-- Include Leaflet CSS and JS from CDN -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 <div class="container mt-3">
   <div class="row">
     <div class="col-8 offset-2">
-      <h3 class="mb-4 text-center"><b><%= indata.title %></b></h3>
+      <h3 class="mb-4 text-center"><b><%= indata.title || 'No Title' %></b></h3>
     </div>
 
-    <div class="card col-6 offset-3 p-0  listing-card">
-      <img src="<%= indata.image.url %>" class="card-img-top show-img mx-auto d-block" alt="Listing Image">
+    <div class="card col-6 offset-3 p-0 listing-card">
+      <img src="<%= indata.image && indata.image.url ? indata.image.url : '/placeholder.jpg' %>" class="card-img-top show-img mx-auto d-block" alt="Listing Image">
       <div class="card-body text-center">
-         <p class="card-text">  <i> <%= indata.owner.username %> </i> </p> 
-        <p class="card-text"> <%= indata.description %> </p> 
-        <p class="card-text"> <b>Price:</b> ₹ <%= indata.price.toLocaleString("en-IN") %> </p>
-        <p class="card-text"> <b>Location:</b> <%= indata.location %> </p>
-        <p  class="card-text"><b>Country:</b> <%= indata.country %> </p>
+        <p class="card-text"><i><%= indata.owner && indata.owner.username ? indata.owner.username : 'Unknown User' %></i></p>
+        <p class="card-text"><%= indata.description || 'No description available' %></p>
+        <p class="card-text"><b>Price:</b> ₹ <%= indata.price ? indata.price.toLocaleString("en-IN") : 'N/A' %></p>
+        <p class="card-text"><b>Location:</b> <%= indata.location || 'Unknown' %></p>
+        <p class="card-text"><b>Country:</b> <%= indata.country || 'Unknown' %></p>
+        <p class="card-text"><b>Coordinates:</b> <%= indata.geometry && indata.geometry.coordinates ? `[${indata.geometry.coordinates[0]}, ${indata.geometry.coordinates[1]}]` : 'Not available' %></p>
       </div>
     </div>
   </div>
 
-  <% if( curuser && curuser._id.equals(indata.owner._id)) { %>
-
+  <% if (curuser && indata.owner && curuser._id.equals(indata.owner._id)) { %>
   <div class="col-3 offset-2">
     <div class="d-flex gap-2">
-      <a  class="btn btn-dark w-100" href="/listing/<%= indata._id %>/edit">Edit</a>
-
-      <form method="post" action="/listing/<%= indata._id %>?_method=DELETE" class="w-100">
+      <a class="btn btn-dark w-100" href="/listing/<%= indata._id %>/edit">Edit</a>
+      <form method="POST" action="/listing/<%= indata._id %>?_method=DELETE" class="w-100">
         <button type="submit" class="btn btn-danger w-100">Delete</button>
       </form>
     </div>
   </div>
-
   <% } %>
 
-
- <div class="col-8 offset-3">
-  <br> 
-  <h4>Leave a Review</h4>
-  <hr>
- <% if(curuser) { %>
-   <form method="POST" action="/listing/<%= indata._id %>/reviews">
-  
-  <div class="mb-3 mt-3">
-    <label for="rating" class="form-label">Rating</label>
-  <fieldset class="starability-slot">
-   
-  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
-  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-  <label for="first-rate1" title="Terrible">1 star</label>
-  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-  <label for="first-rate2" title="Not good">2 stars</label>
-  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-  <label for="first-rate3" title="Average">3 stars</label>
-  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-  <label for="first-rate4" title="Very good">4 stars</label>
-  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-  <label for="first-rate5" title="Amazing">5 stars</label>
-  </fieldset>
-</div>
-    <div class="mb-3 mt-3">
-      <label  class="form-label" for="comment">Comment</label>
-      <textarea class="form-control" name="review[Comment]" id="Comment" cols="30" rows="10" required></textarea>
-      <div class="invalid-feedback">Please Add  some comment for review</div>
-    </div>
-    <button class="btn btn-outline-dark">Submit</button>
-  </form>
-    <hr> 
-
-     <% } %>
-
-
-   <p> <b> All reviews </b> </p>
-  
-<div class="row">
-
-<% for(review of indata.reviews) { %>
-
-   <div class="card col-5 ms-3 mb-3 "> 
-    <div class="card-body">
-       <h5 class="card-title">  @<%= review.author.username %> </h5>
-       <p class="starability-result card-text" data-rating="<%=review.rating%>"></p>
-        <p class="card-text"><%=review.Comment %></p>
-        
-    </div>
-    <form class="mb-3" method="POST" action="/listing/<%= indata._id %>/reviews/<%= review._id %>?_method=DELETE">
-       <button class="btn btn-sm btn-dark">Delete</button>
+  <div class="col-8 offset-3">
+    <br>
+    <h4>Leave a Review</h4>
+    <hr>
+    <% if (curuser) { %>
+    <form method="POST" action="/listing/<%= indata._id %>/reviews" class="needs-validation" novalidate>
+      <div class="mb-3 mt-3">
+        <label for="rating" class="form-label">Rating</label>
+        <fieldset class="starability-slot">
+          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+          <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
+      </div>
+      <div class="mb-3 mt-3">
+        <label class="form-label" for="comment">Comment</label>
+        <textarea class="form-control" name="review[Comment]" id="Comment" cols="30" rows="10" required></textarea>
+        <div class="invalid-feedback">Please add some comment for review</div>
+      </div>
+      <button class="btn btn-outline-dark">Submit</button>
     </form>
+    <hr>
+    <% } %>
+
+    <p><b>All reviews</b></p>
+    <div class="row">
+      <% for (let review of indata.reviews || []) { %>
+      <div class="card col-5 ms-3 mb-3">
+        <div class="card-body">
+          <h5 class="card-title">@<%= review.author && review.author.username ? review.author.username : 'Anonymous' %></h5>
+          <p class="starability-result card-text" data-rating="<%= review.rating || 1 %>"></p>
+          <p class="card-text"><%= review.Comment || 'No comment' %></p>
+        </div>
+        <form class="mb-3" method="POST" action="/listing/<%= indata._id %>/reviews/<%= review._id %>?_method=DELETE">
+          <button class="btn btn-sm btn-dark">Delete</button>
+        </form>
+      </div>
+      <% } %>
+    </div>
   </div>
- <%  } %> 
- </div> 
 
- </div>  
+  <!-- Map Section -->
+<div class="col-8 offset-2 mt-5">
+  <h4>Hotel Location</h4>
+  <% // Check if latitude and longitude exist, are numbers, and are not zero. %>
+  <% if (latitude && longitude && !isNaN(latitude) && !isNaN(longitude) && latitude !== 0 && longitude !== 0) { %>
+    <div id="map" style="height: 400px; width: 100%;"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Embed the latitude and longitude using JSON.parse and JSON.stringify for safety.
+        // This ensures they are properly rendered as JavaScript number literals.
+        const currentLatitude = JSON.parse('<%- JSON.stringify(latitude) %>');
+        const currentLongitude = JSON.parse('<%- JSON.stringify(longitude) %>');
+        
+        // Also safely embed the title string
+        const hotelTitle = JSON.parse('<%- JSON.stringify(indata.title) %>');
 
+        // Leaflet expects [latitude, longitude]
+        const mapCoordinates = [currentLatitude, currentLongitude];
+
+        // This client-side check is a fallback; the EJS 'if' statement handles most cases.
+        if (typeof currentLatitude === 'number' && typeof currentLongitude === 'number' &&
+            !isNaN(currentLatitude) && !isNaN(currentLongitude)) {
+
+          const map = L.map("map").setView(mapCoordinates, 13);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+          }).addTo(map);
+
+          L.marker(mapCoordinates)
+            .addTo(map)
+            .bindPopup("<b>" + hotelTitle + "</b>") // Use the safe hotelTitle variable
+            .openPopup();
+        } else {
+          console.error("Invalid latitude or longitude received from backend or during EJS rendering.");
+          document.getElementById('map').innerText = 'Map not available due to invalid location data.';
+        }
+      });
+    </script>
+  <% } else { %>
+    <p class="text-danger">Map not available.</p>
+  <% } %>
 </div>
-
 <br>
 <br>
-
