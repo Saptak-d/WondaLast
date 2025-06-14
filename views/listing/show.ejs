@@ -19,6 +19,9 @@
         <p class="card-text"><b>Location:</b> <%= indata.location || 'Unknown' %></p>
         <p class="card-text"><b>Country:</b> <%= indata.country || 'Unknown' %></p>
         <p class="card-text"><b>Coordinates:</b> <%= indata.geometry && indata.geometry.coordinates ? `[${indata.geometry.coordinates[0]}, ${indata.geometry.coordinates[1]}]` : 'Not available' %></p>
+        <% if(indata.category &&  indata.category !== "Undefine"){ %>
+        <p class="card-text"><b>category:</b> <%= indata.category || 'Unknown' %></p>
+       <% } %>
       </div>
     </div>
   </div>
@@ -125,5 +128,6 @@
     <p class="text-danger">Map not available.</p>
   <% } %>
 </div>
-<br>
+</div> <!-- close container -->
+
 <br>

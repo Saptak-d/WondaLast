@@ -18,6 +18,25 @@
                 <div class="invalid-feedback">description should be valid  </div>
             </div>
 
+        <div class="mb-3">
+             <label for="category" class="form-label">Select one option:</label>
+                <select id="category" name="listing[category]" class="form-select" required>
+                     <option value="" disabled selected>Select an option</option>
+                        <option value="Trending"><b>Trending</b> </option>
+                        <option value="Mountain"><b>Mountain</b> </option>
+                          <option value="Room"><b>Room</b></option>
+                          <option value="iconicCites"><b>iconic Cites</b></option>
+                          <option value="Castles"><b>Castles</b></option>
+                         <option value="AmazingPools"><b>Amazing</b></option>
+                         <option value="Camping"><b>Camping</b></option>
+                         <option value="Farms"><b>Farms</b></option>
+                         <option value="Arctic"><b>Arctic</b></option>
+                         <option value="Domes"><b>Domes</b></option>
+                         <option value="Boats"><b>Boats</b></option>
+                </select>
+                <div class="invalid-feedback">Please select one option.</div>
+        </div>
+
             <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
                 <input type="file" id="image" name="listing[image]" class="form-control" required>
@@ -34,11 +53,11 @@
 
             <div class="mb-3 col-mid-8">
                 <label for="country" class="form-label">Country</label>
+
                 <input type="text" id="country" name="listing[country]" class="form-control" placeholder="india" required>
+                
+                <div class="invalid-feedback"> country Name Should be Valid </div>
 
-                <div class="invalid-feedback"> country Name Should be Valid</div>
-
-           
             </div>
 
            </div>

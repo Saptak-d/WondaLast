@@ -1,9 +1,160 @@
 <% layout("layouts/boilerplate") %>
-    <h1>All Listings </h1>
-     <!-- <form method="GET" action="/listing/new">
-        <button type="submit"> Create New Listing </button>
-     </form> -->
-    <div class="row  row-cols-lg-3 row-cols-mid-2 row-cols-sm-1" >
+   <style>
+     #filters{
+      display: flex;
+       flex-wrap: wrap;
+       align-items: center;
+     }
+     .filter{
+      text-align: center;
+      margin-right: 2rem;
+      margin-top: 2rem;
+      opacity: 0.7 ;
+     }
+     .filter:hover{
+      opacity: 1;
+      cursor: pointer;
+     }
+     .filter p{
+       font-size: 0.8rem;
+     }
+     .tax-info{
+      display: none;
+     }
+
+     .tax-toggle{
+       border: 1px solid black;
+       border-radius: 1rem;
+       height: 3.25rem;
+       padding: 1rem;
+        margin-left: 6rem;
+        display: flex;
+        align-items: center;
+     }
+     a{
+       text-decoration: none;
+       color: inherit;
+     }
+     .filtersgo a:hover{
+      color: #fe424d  ;
+     }
+     .tax-toggle {
+  border: 1px solid black;
+  border-radius: 1rem;
+  height: auto;
+  padding: 1rem;
+  margin: 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  transition: all 0.3s ease;
+}
+
+.tax-toggle label {
+  font-size: 1rem; /* default size */
+  text-align: center;
+}
+
+/* Tablet screens */
+@media (max-width: 768px) {
+  .tax-toggle label {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile screens */
+@media (max-width: 480px) {
+  .tax-toggle label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .tax-toggle label {
+    font-size: 0.7rem;
+  }
+}
+
+        
+   </style>
+      <div id="filters" class="filtersgo">
+          <a href="/listing/type/Trending" >
+             <div class="filter">
+                 <div> <i class="fa-solid fa-fire"></i></div>
+                 <p>Trending</p>
+              </div>
+          </a>
+         <a href="/listing/type/Mountain">
+            <div class="filter">
+              <i class="fa-solid fa-mountain"></i>
+               <p> Mountain </p>
+            </div>
+         </a>
+         <a href="/listing/type/Room">
+           <div class="filter">
+              <i class="fa-solid fa-bed"></i>
+              <p>Room</p>
+           </div>
+         </a>
+          <a href="/listing/type/iconicCites">
+              <div class="filter">
+               <i class="fa-solid fa-mountain-city"></i>
+             <p>iconic Cites</p>
+               </div>
+          </a>
+          <a href="/listing/type/Castles">
+            <div class="filter">
+              <i class="fa-brands fa-fort-awesome"></i>
+              <p> Castles </p>
+            </div>
+          </a>
+          <a href="/listing/type/AmazingPools">
+            <div class="filter">
+             <i class="fa-solid fa-person-swimming"></i>
+             <p> Amazing Pools </p>
+            </div>
+          </a>
+          <a href="/listing/type/Camping">
+             <div class="filter">
+                <i class="fa-solid fa-tree"></i>
+                <p> Camping </p>
+              </div>
+          </a>
+          <a href="/listing/type/Farms">
+            <div class="filter">
+             <i class="fa-solid fa-cow"></i>
+             <p> Farms </p>
+           </div>
+          </a>
+        <a href="/listing/type/Arctic">
+           <div class="filter">
+             <i class="fa-solid fa-snowflake"></i>
+             <p> Arctic </p>
+           </div>
+        </a>          
+        <a href="/listing/type/Domes">
+           <div class="filter">
+             <i class="fa-solid fa-igloo"></i>
+             <p> Domes </p>
+           </div>
+          </a>
+          <a href="/listing/type/Boats">
+            <div class="filter">
+             <i class="fa-solid fa-sailboat"></i>
+              <p> Boats </p>
+           </div>
+          </a>
+          <div class="tax-toggle">
+              <div class="form-check-reverse  form-switch">
+               <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+                <label class="form-check-label" for="switchCheckDefault">Display Total After Taxes</label>
+                  </div>
+           </div>
+      </div>
+    <div class="row  row-cols-lg-3 row-cols-mid-2 row-cols-sm-1 mt-3" >
   
       <% for(let list of Alllistings) { %>  
          <a href="/listing/<%= list._id %>" class="listing-link"> 
@@ -18,7 +169,8 @@
           <div class="card-body">
             <p class="card-text">
              <b><%=list.title %> </b> <br>
-             ₹<%=list.price.toLocaleString("en-IN") %>
+             ₹<%=list.price.toLocaleString("en-IN") %> /night
+             <i class="tax-info"> &nbsp; &nbsp; +18% GST</i>
           </p>
           </div>
         </div>
@@ -29,3 +181,19 @@
 
     </div>
      
+    <script>
+
+let taxswitch = document.getElementById("switchCheckDefault");
+
+taxswitch.addEventListener("click", ()=>{
+  let   taxinfo = document.getElementsByClassName("tax-info")
+   for(info of taxinfo){
+    if(info.style.display != "inline"){
+    info.style.display = "inline";}
+    else{
+      info.style.display = "none";
+    }
+   }
+});
+
+    </script>

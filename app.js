@@ -2,9 +2,6 @@
 if(process.env.NODE_ENV != "production"){
  require('dotenv').config()
 }
-console.log(process.env.secret) // remove this after you've confirmed it is working
-
-
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -55,11 +52,7 @@ const sessionOption = ({
     httpOnly : true
   }
 })
-app.get("/",(req,res)=>{
-    res.send("hi am the root");
-});
 
-//middleware to store flash message
 
 app.use(session(sessionOption));
 
@@ -72,7 +65,11 @@ passport.use(new LocalStrategy(User.authenticate()) );
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-////middleware to store flash message
+app.use('/.well-known', (req, res) => {
+    res.status(204).end();
+});
+
+
 
 app.use((req,res,next)=>{
   res.locals.success = req.flash("success")

@@ -6,7 +6,11 @@ module.exports.index = async (req, res) => {
     const Alllistings = await Listing.find({});
     res.render("listing/index.ejs", { Alllistings });
 };
-
+module.exports.SpecificType = async(req,res)=>{
+    let{is} = req.params;
+ const Alllistings = await Listing.find({category : is });
+    res.render("listing/index.ejs", { Alllistings });
+}
 module.exports.renderNewForm = (req, res) => {
     res.render("listing/new.ejs");
 };
@@ -150,3 +154,10 @@ module.exports.updateListing = async (req, res) => {
     req.flash("success", "Listing Updated");
     res.redirect(`/listing/${id}`);
 };
+module.exports.destroyListings = async(req,res)=>{
+  let {id} = req.params;
+  await Listing.findByIdAndDelete(id);
+   req.flash("success", " listing  Deleted");
+  res.redirect("/listing")
+};
+

@@ -1,5 +1,13 @@
 <% layout("layouts/boilerplate") %>
 
+<style>
+    .prev-img{
+        height: 150px;
+        width: 200px;
+         object-fit: cover;  
+    }
+</style>
+
 <div class="container mt-4">
     <div class="col-8 offset-2">
         <h3>Edit Your Listing</h3>
@@ -16,10 +24,27 @@
                 <textarea id="description" name="listing[description]" class="form-control" placeholder="Describe your listing..." required ><%= indata.description %></textarea>
                <div class="invalid-feedback">description should be valid  </div>           
             </div>
-
+      <div class="mb-3">
+             <label for="category" class="form-label">Select one option:</label>
+                <select id="category" name="listing[category]" class="form-select" required>
+                     <option value="" disabled selected>Select an option</option>
+                        <option value="Trending"><b>Trending</b> </option>
+                        <option value="Mountain"><b>Mountain</b> </option>
+                          <option value="Room"><b>Room</b></option>
+                          <option value="iconicCites"><b>iconic Cites</b></option>
+                          <option value="Castles"><b>Castles</b></option>
+                         <option value="AmazingPools"><b>Amazing Pools</b></option>
+                         <option value="Camping"><b>Camping</b></option>
+                         <option value="Farms"><b>Farms</b></option>
+                         <option value="Arctic"><b>Arctic</b></option>
+                         <option value="Domes"><b>Domes</b></option>
+                         <option value="Boats"><b>Boats</b></option>
+                </select>
+                <div class="invalid-feedback">Please select one option.</div>
+        </div>
             <div class="mb-3">
                 Original listing image <br>
-                <img src="<%= originalimageurl %>" alt="">
+                <img class="prev-img" src="<%= originalimageurl %>" alt="">
             </div>
 
             <div class="mb-3">
@@ -40,6 +65,7 @@
                  <div class="invalid-feedback"> country Name Should be Valid</div>
                 </div>
             </div>
+
     
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
