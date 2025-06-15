@@ -9,7 +9,7 @@ module.exports.index = async (req, res) => {
 module.exports.SpecificType = async(req,res)=>{
     let{is} = req.params;
  const Alllistings = await Listing.find({category : is });
-    res.render("listing/index.ejs", { Alllistings });
+    res.render("listing/index.ejs",{ Alllistings });
 }
 module.exports.renderNewForm = (req, res) => {
     res.render("listing/new.ejs");

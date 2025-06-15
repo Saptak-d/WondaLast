@@ -1,5 +1,10 @@
 <% layout("layouts/boilerplate") %>
-
+ <style>
+  #map{
+    border: 1px solid rgb(51, 49, 49);
+    border-radius: 20px;
+  }
+ </style>
 <!-- Include Leaflet CSS and JS from CDN -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -18,7 +23,6 @@
         <p class="card-text"><b>Price:</b> ₹ <%= indata.price ? indata.price.toLocaleString("en-IN") : 'N/A' %></p>
         <p class="card-text"><b>Location:</b> <%= indata.location || 'Unknown' %></p>
         <p class="card-text"><b>Country:</b> <%= indata.country || 'Unknown' %></p>
-        <p class="card-text"><b>Coordinates:</b> <%= indata.geometry && indata.geometry.coordinates ? `[${indata.geometry.coordinates[0]}, ${indata.geometry.coordinates[1]}]` : 'Not available' %></p>
         <% if(indata.category &&  indata.category !== "Undefine"){ %>
         <p class="card-text"><b>category:</b> <%= indata.category || 'Unknown' %></p>
        <% } %>

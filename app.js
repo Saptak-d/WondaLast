@@ -24,11 +24,13 @@ const listingsRouter  = require("./routs/listing.js")
 const reviewsRouter = require("./routs/review.js")
 const usersRouter = require("./routs/user.js")
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./Models/user.js");
 
+const DbUrl = process.env.AtlasDB_URL;
 
 
 
@@ -39,11 +41,23 @@ main().then(()=>{
 });
 
 async function main(){
-  await mongoose.connect('mongodb://127.0.0.1:27017/wondaelust');    
+  await mongoose.connect(DbUrl);    
 }
 
+const store = MongoStore.create({
+   mongoUrl: DbUrl,
+    crypto:{
+     secret : process.env.secret,
+   },
+   touchAfter : 24 * 3600
+});
+store.on("error", ()=>{
+  console.log("Error in Session Store",err);
+})
+
 const sessionOption = ({
-  secret : "Abac123",
+  store,
+   secret : process.env.secret,
   resave: false,
   saveUninitialized: true ,
   cookie: {

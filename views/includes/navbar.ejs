@@ -1,59 +1,86 @@
 <style>
-.btn-search{
-  background:#fe424d; 
+/* Search button styling */
+.btn-search {
+  background: #fe424d;
   color: #fff;
   border-radius: 14px;
 }
-.btn-search:hover{
-  background:#fe424d; 
+
+.btn-search:hover {
+  background: #fe424d;
   color: #fff;
 }
 
+/* Search input styling */
+.search-input {
+  border-radius: 14px;
+  padding: 0.5rem 3rem 0.5rem 3rem;
+  font-size: 1rem;
+}
 
-.search-input{
- border-radius: 14px; 
- padding: 0.5rem 3rem 0.5rem 3rem;
- font-size: 1rem;
- 
+/* Always keep navbar with white background */
+.navbar {
+  background-color: white;
+  z-index: 1030;
+}
+
+/* Fix overlapping issue on mobile */
+@media (max-width: 768px) {
+  .navbar-collapse {
+    position: fixed !important;
+    top: 56px; /* height of navbar */
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 999;
+  }
 }
 </style>
-<nav class="navbar navbar-expand-md bg-body-light  border-bottom sticky-top ">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/listing"><i class="fa-regular fa-compass"></i></a>
-      <button
-       class="navbar-toggler"
-        type="button"
-         data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link" href="/listing">Explore</a>
-        </div>
 
+<nav class="navbar navbar-expand-md border-bottom sticky-top">
+  <div class="container-fluid">
+    <!-- Brand Logo -->
+    <a class="navbar-brand" href="/listing">
+      <i class="fa-regular fa-compass"></i>
+    </a>
+
+    <!-- Navbar Toggler for mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+      <!-- Left side nav items -->
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listing">Explore</a>
+      </div>
+
+      <!-- Search bar (centered with ms-auto) -->
       <div class="navbar-nav ms-auto">
-
-        <form class="d-flex " role="search"  action="/listing/search">
-       <input class="form-control  search-input ms-4" name="q" type="search" placeholder="Search Destination" />
-
-        <button class="btn btn-search ms-3" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-
-       </form>
-
+        <form class="d-flex" role="search" action="/listing/search">
+          <input class="form-control search-input ms-4" name="q" type="search" placeholder="Search Destination" />
+          <button class="btn btn-search ms-3" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
       </div>
 
-         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="/listing/new">Wandalast Your Home</a>
-          <% if(!curuser) { %> 
-          <a class="nav-link " href="/signup"><b>Sign up</b></a>
+      <!-- Right side nav items -->
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listing/new">Wandalast Your Home</a>
+
+        <% if (!curuser) { %> 
+          <a class="nav-link" href="/signup"><b>Sign up</b></a>
           <a class="nav-link" href="/login"><b>Log in</b></a>
-          <% } %>
-           <% if(curuser) { %> 
-             <a class="nav-link" href="/logout">Log out</a>
-           <% } %>
-        </div>
+        <% } %>
 
+        <% if (curuser) { %> 
+          <a class="nav-link" href="/logout">Log out</a>
+        <% } %>
       </div>
+
     </div>
-  </nav>
+  </div>
+</nav>
