@@ -7,7 +7,7 @@ const {saveRedirectUrl} = require("../middleware.js");
 const userController = require("../controllers/users.js")
 
 router.get("/", (req, res) => {
-  res.send("Server is live!");
+   res.redirect("/listing")
 });
 
 router
