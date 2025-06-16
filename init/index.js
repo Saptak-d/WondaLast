@@ -1,26 +1,31 @@
+require('dotenv').config({ path: '../.env' });  // <-- path added
+
 const mongoose = require("mongoose");
-const initdata = require("./data.js"); // Correct path for data.js
-const listing = require("../Models/listing.js"); // Correct path for listing.js (go up one level and into db)
+const initdata = require("./data.js");
+const listing = require("../Models/listing.js");
 
+async function main() {
+  try {
+    await mongoose.connect(process.env.AtlasDB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
 
-main().then(()=>{
-    console.log("connected to DB")
-}).catch(err=>{
-  console.log("err");
-});
+    console.log("Connected to DB");
 
- 
-async function main(){
-  await mongoose.connect('mongodb://127.0.0.1:27017/wondaelust');    
+    await initDB();
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    await mongoose.connection.close();
+  }
 }
 
+const initDB = async () => {
+  await listing.deleteMany({});
+  initdata.data = initdata.data.map((obj) => ({ ...obj, owner: "684fe0f9b9b123a0926cd0ce" }));
+  await listing.insertMany(initdata.data);
+  console.log("Data was initialized");
+};
 
- const initDB = async () => {
-    await listing.deleteMany({});
-    initdata.data = initdata.data.map((obj)=>({...obj,owner: "683c064e9286914499f58f47" }));
-    await listing.insertMany(initdata.data); 
-    console.log("data was intilize ")
-
- };
-
- initDB();
+main();
