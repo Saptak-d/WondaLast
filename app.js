@@ -41,6 +41,8 @@ main().then(()=>{
 });
 
 async function main(){
+  console.log("Render DB URL:", process.env.AtlasDB_URL);
+
   await mongoose.connect(DbUrl);    
 }
 
